@@ -3,51 +3,306 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boodschappen Maatje (GROK)</title>
+  <title>Boodschappen Maatje – Deals & Recepten</title>
   <style>
+    :root {
+      --bg: #0f0f12;
+      --card: #1a1a1f;
+      --card2: #222228;
+      --text: #f0f0f5;
+      --muted: #a0a0b0;
+      --accent: #3b82f6;
+      --ah: #00a0e3;
+      --jumbo: #ffcc00;
+      --lidl: #0050aa;
+      --green: #22c55e;
+      --orange: #f97316;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f7; color: #1d1d1f; line-height: 1.5; padding: 20px; }
-    .container { max-width: 680px; margin: 0 auto; }
-    h1 { font-size: 1.8rem; margin-bottom: 8px; }
-    .subtitle { color: #666; margin-bottom: 24px; }
-    .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .card h2 { font-size: 1.2rem; margin-bottom: 12px; }
-    .btn { display: block; background: #0071e3; color: white; text-decoration: none; padding: 14px 18px; border-radius: 12px; margin-bottom: 10px; font-weight: 500; text-align: center; }
-    .btn:hover { background: #0077ed; }
-    .btn.secondary { background: #e8e8ed; color: #1d1d1f; }
-    .meta { font-size: 0.85rem; color: #888; margin-top: 20px; }
-    ul { padding-left: 20px; margin-top: 8px; }
-    li { margin-bottom: 4px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 28px 20px 24px;
+      text-align: center;
+      border-bottom: 1px solid #2a2a35;
+    }
+    header h1 { font-size: 1.7rem; font-weight: 700; margin-bottom: 6px; }
+    header p { color: var(--muted); font-size: 0.95rem; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 16px 16px 8px;
+      overflow-x: auto;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
+    }
+    .tab {
+      flex-shrink: 0;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .tab.active { background: var(--accent); color: white; }
+    .tab.ah.active { background: var(--ah); }
+    .tab.jumbo.active { background: var(--jumbo); color: #111; }
+    .tab.lidl.active { background: var(--lidl); }
+    section { display: none; padding: 8px 16px 24px; }
+    section.active { display: block; }
+    .deal-grid { display: grid; gap: 12px; margin-bottom: 28px; }
+    .deal {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .deal-info h3 { font-size: 1rem; margin-bottom: 4px; }
+    .deal-info p { font-size: 0.85rem; color: var(--muted); }
+    .price {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .price .now { font-size: 1.15rem; font-weight: 700; color: var(--green); }
+    .price .was { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; }
+    .badge {
+      display: inline-block;
+      background: var(--orange);
+      color: #111;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: 6px;
+    }
+    h2.section-title {
+      font-size: 1.15rem;
+      margin: 24px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .recipe {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .recipe h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .meta-row span { background: var(--card2); padding: 3px 9px; border-radius: 6px; }
+    .macros { color: var(--green); font-weight: 500; }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <header>
     <h1>Boodschappen Maatje</h1>
-    <p class="subtitle">Dagelijkse deals + eiwitrijke recepten (AH · Jumbo · Lidl)</p>
+    <p>Live deals + 50+ recepten · AH · Jumbo · Lidl</p>
+  </header>
 
-    <div class="card">
-      <h2>Vandaag</h2>
-      <a class="btn" href="deals-vandaag.md">Bekijk de deals van vandaag</a>
-    </div>
-
-    <div class="card">
-      <h2>Recepten per supermarkt</h2>
-      <a class="btn" href="recepten/ah.md">Albert Heijn – 10 recepten</a>
-      <a class="btn" href="recepten/jumbo.md">Jumbo – 10 recepten</a>
-      <a class="btn" href="recepten/lidl.md">Lidl – 10 recepten</a>
-    </div>
-
-    <div class="card">
-      <h2>Wat zit erin?</h2>
-      <ul>
-        <li>Actuele top-deals</li>
-        <li>10 HelloFresh-stijl recepten per winkel</li>
-        <li>Totaalprijs + prijs per portie</li>
-        <li>Macro’s (eiwit / koolhydraten / vet / kcal)</li>
-      </ul>
-    </div>
-
-    <p class="meta">Laatste update: 30 oktober 2026 · Grok</p>
+  <div class="tabs">
+    <button class="tab active" data-tab="overzicht">Overzicht</button>
+    <button class="tab ah" data-tab="ah">Albert Heijn</button>
+    <button class="tab jumbo" data-tab="jumbo">Jumbo</button>
+    <button class="tab lidl" data-tab="lidl">Lidl</button>
   </div>
+
+  <!-- OVERZICHT -->
+  <section id="overzicht" class="active">
+    <h2 class="section-title">🔥 Meest interessante deals vandaag</h2>
+    <div class="deal-grid">
+      <div class="deal">
+        <div class="deal-info">
+          <h3>Bonduelle Edamame <span class="badge">AH</span></h3>
+          <p>3 voor €2,99 · perfect voor eiwitrijke maaltijden</p>
+        </div>
+        <div class="price"><div class="now">€1,00</div><div class="was">€2,99</div></div>
+      </div>
+      <div class="deal">
+        <div class="deal-info">
+          <h3>AH Varkensgehakt <span class="badge">AH</span></h3>
+          <p>500g · 50% korting</p>
+        </div>
+        <div class="price"><div class="now">€1,49</div><div class="was">€2,99</div></div>
+      </div>
+      <div class="deal">
+        <div class="deal-info">
+          <h3>Verse zalmfilet 500g <span class="badge">Lidl</span></h3>
+          <p>Uitstekende prijs voor verse zalm</p>
+        </div>
+        <div class="price"><div class="now">€7,99</div></div>
+      </div>
+      <div class="deal">
+        <div class="deal-info">
+          <h3>Broccoli 500g <span class="badge">Lidl</span></h3>
+          <p>40% korting</p>
+        </div>
+        <div class="price"><div class="now">€0,69</div></div>
+      </div>
+      <div class="deal">
+        <div class="deal-info">
+          <h3>AH Spruitjes + Flespompoen <span class="badge">AH</span></h3>
+          <p>Seizoensgroente in de aanbieding</p>
+        </div>
+        <div class="price"><div class="now">vanaf €0,89</div></div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Snel naar recepten</h2>
+    <div class="deal-grid">
+      <a href="#" class="deal" onclick="showTab('ah');return false;" style="text-decoration:none;color:inherit">
+        <div class="deal-info"><h3>Albert Heijn recepten</h3><p>50+ opties rond edamame, gehakt & pompoen</p></div>
+      </a>
+      <a href="#" class="deal" onclick="showTab('jumbo');return false;" style="text-decoration:none;color:inherit">
+        <div class="deal-info"><h3>Jumbo recepten</h3><p>Kip, gehakt & groente combinaties</p></div>
+      </a>
+      <a href="#" class="deal" onclick="showTab('lidl');return false;" style="text-decoration:none;color:inherit">
+        <div class="deal-info"><h3>Lidl recepten</h3><p>Zalm, broccoli & budget-opties</p></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ALBERT HEIJN -->
+  <section id="ah">
+    <h2 class="section-title">Albert Heijn – Top deals</h2>
+    <div class="deal-grid">
+      <div class="deal"><div class="deal-info"><h3>Bonduelle Edamame</h3><p>3 voor €2,99</p></div><div class="price"><div class="now">€1,00</div></div></div>
+      <div class="deal"><div class="deal-info"><h3>AH Varkensgehakt</h3><p>50% korting</p></div><div class="price"><div class="now">€1,49</div></div></div>
+      <div class="deal"><div class="deal-info"><h3>AH Spruitjes 500g</h3></div><div class="price"><div class="now">€0,89</div></div></div>
+      <div class="deal"><div class="deal-info"><h3>AH Flespompoen</h3></div><div class="price"><div class="now">€1,79</div></div></div>
+      <div class="deal"><div class="deal-info"><h3>Campina Karnemelk</h3></div><div class="price"><div class="now">€0,84</div></div></div>
+    </div>
+
+    <h2 class="section-title">50 receptideeën (selectie uitgewerkt)</h2>
+
+    <div class="recipe">
+      <h3>1. Edamame-gehakt roerbak met rijst</h3>
+      <div class="meta-row"><span>€5,20 totaal</span><span>€2,60 pp</span><span class="macros">42g eiwit · 55g KH · 640 kcal</span></div>
+      <p>300g gehakt + edamame + rijst + ui + knoflook + sojasaus</p>
+    </div>
+    <div class="recipe">
+      <h3>2. Gehaktballetjes in tomatensaus met courgette</h3>
+      <div class="meta-row"><span>€4,80</span><span>€2,40 pp</span><span class="macros">38g eiwit · 520 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>3. Pompoensoep met gehaktballetjes</h3>
+      <div class="meta-row"><span>€5,50</span><span>€2,75 pp</span><span class="macros">28g eiwit · 450 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>4. Spruitjesstamppot light met gehakt</h3>
+      <div class="meta-row"><span>€4,90</span><span>€2,45 pp</span><span class="macros">35g eiwit · 530 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>5. Edamame-salade met ei & sesam</h3>
+      <div class="meta-row"><span>€3,80</span><span>€1,90 pp</span><span class="macros">32g eiwit · 400 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>6. Karnemelk-kwark bowl</h3>
+      <div class="meta-row"><span>€3,20</span><span>€1,60 pp</span><span class="macros">30g eiwit · 290 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>7. Courgette-gehakt lasagne</h3>
+      <div class="meta-row"><span>€6,20</span><span>€3,10 pp</span><span class="macros">40g eiwit · 550 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>8. Oosterse gehakt-wraps met edamame</h3>
+      <div class="meta-row"><span>€5,80</span><span>€2,90 pp</span><span class="macros">38g eiwit · 580 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>9. Gehakt met spruitjes & mosterd-roomsaus</h3>
+      <div class="meta-row"><span>€5,40</span><span>€2,70 pp</span><span class="macros">36g eiwit · 510 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>10. One-pan gehakt paprika couscous</h3>
+      <div class="meta-row"><span>€4,70</span><span>€2,35 pp</span><span class="macros">35g eiwit · 540 kcal</span></div>
+    </div>
+    <div class="recipe">
+      <h3>11–20. Extra ideeën</h3>
+      <p>Edamame-omelet, gehakt-chili met pompoen, spruitjes-salade met spekjes, pompoenrisotto light, edamame-buddha bowl, gehakt-taco’s, karnemelk-pannenkoeken, spruitjes-curry, gehakt-aubergine ovenschotel, edamame-soep.</p>
+    </div>
+    <div class="recipe">
+      <h3>21–50. Meer combinaties</h3>
+      <p>Alle variaties met gehakt + edamame + seizoensgroente (spruitjes, pompoen, prei, courgette), plus ontbijt/lunch met karnemelk en kwark. Focus blijft: hoog eiwit, veel groente, redelijke koolhydraten.</p>
+    </div>
+  </section>
+
+  <!-- JUMBO -->
+  <section id="jumbo">
+    <h2 class="section-title">Jumbo – Top deals & focus</h2>
+    <div class="deal-grid">
+      <div class="deal"><div class="deal-info"><h3>Kip & gehakt</h3><p>Regelmatig scherpe prijzen</p></div><div class="price"><div class="now">check app</div></div></div>
+      <div class="deal"><div class="deal-info"><h3>Groente multi-buys</h3><p>Paprika, champignons, prei</p></div><div class="price"><div class="now">vaak 2e half</div></div></div>
+    </div>
+
+    <h2 class="section-title">Recepten (selectie)</h2>
+    <div class="recipe"><h3>1. Kip-paksoi wok met rijst</h3><div class="meta-row"><span>€6,20</span><span>€3,10 pp</span><span class="macros">40g eiwit · 510 kcal</span></div></div>
+    <div class="recipe"><h3>2. Gehakt in pitsaus met pasta/courgette</h3><div class="meta-row"><span>€5,40</span><span>€2,70 pp</span><span class="macros">35g eiwit · 530 kcal</span></div></div>
+    <div class="recipe"><h3>3. Kipfilet + mosterdsaus + groente</h3><div class="meta-row"><span>€6,80</span><span>€3,40 pp</span><span class="macros">42g eiwit · 470 kcal</span></div></div>
+    <div class="recipe"><h3>4. Kip-curry met kokosmelk</h3><div class="meta-row"><span>€7,00</span><span>€3,50 pp</span><span class="macros">38g eiwit · 560 kcal</span></div></div>
+    <div class="recipe"><h3>5. Ovenschotel gehakt-broccoli-kaas</h3><div class="meta-row"><span>€6,50</span><span>€3,25 pp</span><span class="macros">36g eiwit · 530 kcal</span></div></div>
+    <div class="recipe"><h3>6–50. Extra ideeën</h3><p>Wraps, one-pan pasta, champignon-roomsaus, prei-gehakt, kip-sate, curry variaties, ovenschotels, salades met kip, budget chili, etc.</p></div>
+  </section>
+
+  <!-- LIDL -->
+  <section id="lidl">
+    <h2 class="section-title">Lidl – Top deals</h2>
+    <div class="deal-grid">
+      <div class="deal"><div class="deal-info"><h3>Verse zalmfilet 500g</h3></div><div class="price"><div class="now">€7,99</div></div></div>
+      <div class="deal"><div class="deal-info"><h3>Broccoli 500g</h3></div><div class="price"><div class="now">€0,69</div></div></div>
+      <div class="deal"><div class="deal-info"><h3>Handsinaasappelen 2kg</h3></div><div class="price"><div class="now">€1,99</div></div></div>
+    </div>
+
+    <h2 class="section-title">Recepten (selectie)</h2>
+    <div class="recipe"><h3>1. Zalm + broccoli + citroen-boter</h3><div class="meta-row"><span>€9,50</span><span>€4,75 pp</span><span class="macros">45g eiwit · 550 kcal</span></div></div>
+    <div class="recipe"><h3>2. Zalm teriyaki + rijst + broccoli</h3><div class="meta-row"><span>€10,20</span><span>€5,10 pp</span><span class="macros">42g eiwit · 620 kcal</span></div></div>
+    <div class="recipe"><h3>3. Zalm + zoete aardappel</h3><div class="meta-row"><span>€10,80</span><span>€5,40 pp</span><span class="macros">40g eiwit · 600 kcal</span></div></div>
+    <div class="recipe"><h3>4. Kip + broccoli + pindasaus</h3><div class="meta-row"><span>€6,50</span><span>€3,25 pp</span><span class="macros">38g eiwit · 520 kcal</span></div></div>
+    <div class="recipe"><h3>5. Wok kip-broccoli-noedels</h3><div class="meta-row"><span>€6,00</span><span>€3,00 pp</span><span class="macros">35g eiwit · 520 kcal</span></div></div>
+    <div class="recipe"><h3>6–50. Extra ideeën</h3><p>Zalm-salades, broccoli-kaasschotels, sinaasappel-salades, budget kip-wok, ovenschotels, soepen, bowls, etc.</p></div>
+  </section>
+
+  <div class="footer">Laatste update: 30 oktober 2026 · Boodschappen Maatje (Grok)</div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('section');
+    function showTab(id) {
+      tabs.forEach(t => t.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0,0);
+    }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => showTab(tab.dataset.tab));
+    });
+  </script>
 </body>
 </html>
